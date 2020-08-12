@@ -7,7 +7,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> names = ["React", "Memory", "Shapes", "Match"];
+  List<String> names = ["React", "Color", "Shapes", "Memory"];
 
   List<Color> colors = [AppTheme.ello, AppTheme.red, AppTheme.green, AppTheme.blue];
 
@@ -48,11 +48,15 @@ class _HomePageState extends State<HomePage> {
                       onTap: () {
                         switch (index % 10) {
                           case 0:
-                            Navigator.pushNamed(context, 'block');
+                            Navigator.pushNamed(context, '/react');
 
                             break;
                           case 1:
-                            Navigator.pushNamed(context, '/react');
+                            Navigator.pushNamed(context, '/block');
+                            break;
+
+                          case 3:
+                            Navigator.pushNamed(context, '/memory');
                             break;
                         }
                       },
@@ -82,24 +86,23 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.all(10),
                 ),
               ),
-              GestureDetector(
-                child: Container(
-                  child: Center(child: Text('Start', style: Style.bigHead)),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                      color: AppTheme.white,
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black54,
-                          blurRadius: 2,
-                          offset: Offset(0, 1.5),
-                        ),
-                      ]),
-                  width: 247,
-                  height: 85,
-                ),
-              ),
-              Container(color: Colors.transparent, height: 50, width: 20)
+              // GestureDetector(
+              //   child: Container(
+              //     child: Center(child: Text('Start', style: Style.bigHead)),
+              //     decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.all(Radius.circular(30)),
+              //         color: AppTheme.white,
+              //         boxShadow: <BoxShadow>[
+              //           BoxShadow(
+              //             color: Colors.black54,
+              //             blurRadius: 2,
+              //             offset: Offset(0, 1.5),
+              //           ),
+              //         ]),
+              //     width: 247,
+              //     height: 85,
+              //   ),
+              // ),
             ]),
       ),
     );

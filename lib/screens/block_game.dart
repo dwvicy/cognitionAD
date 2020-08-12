@@ -270,6 +270,10 @@ class _BlockGameState extends State<BlockGame> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                Text(
+                  'Odd Color',
+                  style: Style.bigHead,
+                ),
                 _buildToolbar(),
                 _buildSquare(),
               ],

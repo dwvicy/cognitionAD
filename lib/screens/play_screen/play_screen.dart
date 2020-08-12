@@ -1,83 +1,141 @@
-import 'dart:convert';
-
+import 'dart:math';
+import 'package:cognitionAD/constants/colors.dart';
+import 'package:cognitionAD/screens/play_screen/play_screen_bloc.dart';
 import 'package:cognitionAD/models/highscore.dart';
 import 'package:cognitionAD/models/modes.dart';
-
+import 'package:cognitionAD/models/play_state.dart';
+import 'package:flutter/material.dart';
+import 'package:cognitionAD/global_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+import 'package:vibration/vibration.dart';
+import 'package:audioplayers/audio_cache.dart';
 
-class GlobalBloc {
-  BehaviorSubject<List<Highscore>> _highscore$;
-  BehaviorSubject<List<Highscore>> get highscore$ => _highscore$;
+int next(int min, int max) => min + Random().nextInt(max - min);
 
-  GlobalBloc() {
-    _highscore$ = BehaviorSubject<List<Highscore>>.seeded(
-      [
-        Highscore(mode: Modes.Visual, time: 0),
-        Highscore(mode: Modes.Vibrate, time: 0),
-        Highscore(mode: Modes.Sound, time: 0)
-      ],
+class PlayScreen extends StatefulWidget {
+  Modes mode;
+  PlayScreen(this.mode);
+
+  @override
+  _PlayScreenState createState() => _PlayScreenState();
+}
+
+class _PlayScreenState extends State<PlayScreen> {
+  PlayBloc playBloc;
+  Random rng = Random();
+  MaterialColor screenColor;
+  String screenText = '';
+  Stopwatch stopwatch;
+  Duration waitTime;
+  static AudioCache audioPlayer;
+  Timer _timer = Timer(Duration(minutes: 0), () => {});
+
+  void initState() {
+    super.initState();
+    playBloc = PlayBloc();
+    screenColor = Colors.yellow;
+    audioPlayer = AudioCache();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final GlobalBloc globalBloc = Provider.of<GlobalBloc>(context);
+
+    return StreamBuilder<MapEntry<PlayState, double>>(
+      stream: Observable.combineLatest2(
+        playBloc.playState$,
+        playBloc.resultTime$,
+        (a, b) => MapEntry(a, b),
+      ),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container();
+        }
+        final state = snapshot.data.key;
+        final resultTime = (widget.mode == Modes.Sound)
+            ? snapshot.data.value - 300 //Compensating audio delay (300 ms)
+            : snapshot.data.value;
+
+        if (state == PlayState.Results) {
+          globalBloc.checkHighscore(Highscore(mode: widget.mode, time: resultTime));
+        }
+
+        playScreenInfoSet(state, widget.mode);
+        return GestureDetector(
+          onTap: () {
+            if (_timer.isActive) {
+              _timer.cancel();
+              playBloc.nextScreen(PlayState.TapError);
+            } else {
+              playBloc.nextScreen(state);
+            }
+          },
+          child: Material(
+            color: screenColor,
+            child: Center(
+              child: Text(
+                (state == PlayState.Results)
+                    ? screenText + '\n${resultTime / 1000} Seconds!'
+                    : screenText,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 26,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
-    retrieveHighscore();
   }
 
-  Future checkHighscore(Highscore highscore) async {
-    double oldTime = _highscore$.value.firstWhere((test) => test.mode == highscore.mode).time;
-    double newTime = highscore.time;
+  void playScreenInfoSet(PlayState state, Modes mode) {
+    switch (state) {
+      case PlayState.Start:
+        screenColor = Colors.yellow;
+        screenText = "Tap to Start";
+        break;
 
-    if (oldTime > newTime || oldTime <= 0) {
-      print("jjgsss");
-      var blocList = _highscore$.value;
-      blocList.removeWhere((temp) => temp.getMode == highscore.getMode);
+      case PlayState.Waiting:
+        screenColor = Colors.blue;
+        if (mode == Modes.Visual) {
+          screenText = "Tap when the screen color changes!";
+        } else if (mode == Modes.Vibrate) {
+          screenText = "Tap when your\nphone vibrates!";
+        } else {
+          screenText = "Tap when you hear\nthe sound!";
+        }
+        waitTime = Duration(milliseconds: next(1500, 5500));
+        _timer = Timer(waitTime, () => playBloc.nextScreen(state));
+        break;
 
-      SharedPreferences sharedUser = await SharedPreferences.getInstance();
-      Map<String, dynamic> tempMap = highscore.toJson();
-      String newHighscoreJson = jsonEncode(tempMap);
-      List<String> highscoreJsonList = [];
-      print(sharedUser.getStringList('highscores'));
-      if (sharedUser.getStringList('highscores') == null) {
-        highscoreJsonList.add(newHighscoreJson);
-        for (int i = 0; i < 2; i++) {
-          String unchangedHighscoreJson = jsonEncode(blocList[i].toJson());
-          highscoreJsonList.add(unchangedHighscoreJson);
+      case PlayState.Tap:
+        if (mode == Modes.Vibrate) {
+          Vibration.vibrate(duration: 500);
+        } else if (mode == Modes.Sound) {
+          audioPlayer.play("sound/Beep.mp3");
+        } else {
+          screenColor = Colors.green;
+          screenText = "Tap Now!";
         }
-      } else {
-        List<String> prefBeforeDecodeList = sharedUser.getStringList('highscores');
-        List<Highscore> prefList = [];
-        for (String jsonHighscore in prefBeforeDecodeList) {
-          Map userMap = jsonDecode(jsonHighscore);
-          Highscore tempHighscore = Highscore.fromJson(userMap);
-          if (tempHighscore.mode != highscore.mode) {
-            prefList.add(tempHighscore);
-          }
-        }
-        for (int i = 0; i < 2; i++) {
-          String unchangedHighscoreJson = jsonEncode(prefList[i].toJson());
-          highscoreJsonList.add(unchangedHighscoreJson);
-        }
-        highscoreJsonList.add(newHighscoreJson);
-      }
-      sharedUser.setStringList('highscores', highscoreJsonList);
-      blocList.add(highscore);
-      _highscore$.add(blocList);
-    }
-  }
+        break;
 
-  Future retrieveHighscore() async {
-    SharedPreferences sharedUser = await SharedPreferences.getInstance();
-    List<String> jsonList = sharedUser.getStringList('highscores');
-    List<Highscore> prefList = [];
-    if (jsonList == null) {
-      print("hujef");
-      return;
-    } else {
-      print("DJBJKD");
-      for (String jsonHighscore in jsonList) {
-        Map userMap = jsonDecode(jsonHighscore);
-        Highscore tempHighscore = Highscore.fromJson(userMap);
-        prefList.add(tempHighscore);
-      }
-      _highscore$.add(prefList);
+      case PlayState.Results:
+        screenColor = Colors.yellow;
+        screenText = "Your FLX time";
+        break;
+
+      case PlayState.ErrorDisplay:
+        screenColor = Colors.red;
+        screenText = "You Pressed Early!";
+        break;
+
+      default:
+        screenColor = Colors.blue;
+        screenText = "Tap to Start!";
     }
   }
 }
