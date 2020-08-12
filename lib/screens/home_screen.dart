@@ -7,35 +7,101 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<String> names = ["React", "Memory", "Shapes", "Match"];
+
+  List<Color> colors = [AppTheme.ello, AppTheme.red, AppTheme.green, AppTheme.blue];
+
   @override
   Widget build(BuildContext context) {
+    final orientation = MediaQuery.of(context).orientation;
     var height1 = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-     elevation: 0,
+        elevation: 0,
       ),
       body: Center(
         child: Column(
-                  children: [
-                    Text(
-            'CognitionAD',
-            style: Style.bigHead,
-            textAlign: TextAlign.center,
-          ),
-        
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text('Level 1',
-            style: Style.smolHead,
-            ),
-          ),
-         
-                  ]
-        ),
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'CognitionAD',
+                style: Style.bigHead,
+                textAlign: TextAlign.center,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  'Level 1',
+                  style: Style.smolHead,
+                ),
+              ),
+              Container(color: Colors.transparent, height: 40, width: 20),
+              Expanded(
+                child: GridView.builder(
+                  itemCount: 4,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {
+                        switch (index % 10) {
+                          case 0:
+                            Navigator.pushNamed(context, 'block');
+
+                            break;
+                          case 1:
+                            Navigator.pushNamed(context, '/react');
+                            break;
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                            child: Center(
+                                child: Text(
+                              names[index],
+                              style: Style.smolHead,
+                            )),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(40)),
+                                color: colors[index],
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                    color: Colors.black54,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 1.5),
+                                  ),
+                                ]),
+                            height: 155,
+                            width: 155),
+                      ),
+                    );
+                  },
+                  padding: EdgeInsets.all(10),
+                ),
+              ),
+              GestureDetector(
+                child: Container(
+                  child: Center(child: Text('Start', style: Style.bigHead)),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                      color: AppTheme.white,
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black54,
+                          blurRadius: 2,
+                          offset: Offset(0, 1.5),
+                        ),
+                      ]),
+                  width: 247,
+                  height: 85,
+                ),
+              ),
+              Container(color: Colors.transparent, height: 50, width: 20)
+            ]),
       ),
-    
     );
   }
 }
