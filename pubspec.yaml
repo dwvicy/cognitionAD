@@ -28,7 +28,6 @@ dependencies:
   provider: ^3.0.0+1
   shared_preferences: 
   vibration: 
-  audioplayers: ^0.7.8
   flare_flutter: ^1.5.4
   flip_card: ^0.4.4
 
