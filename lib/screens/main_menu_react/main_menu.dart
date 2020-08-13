@@ -24,23 +24,14 @@ class _MainMenuState extends State<MainMenu> {
 
     return Scaffold(
       backgroundColor: AppTheme.white,
-      drawer: Drawer(
-        elevation: 10,
-        child: ListView(
-          children: <Widget>[
-            ListTile(
-              title: Text("Personal Stats"),
-              trailing: Icon(Icons.arrow_forward),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => StatsAnimation()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      // drawer: Drawer(
+      //   elevation: 10,
+      //   child: ListView(
+      //     children: <Widget>[
+
+      //     ],
+      //   ),
+      // ),
       // appBar: AppBar(
       //   backgroundColor: Colors.deepPurpleAccent,
       //   elevation: 0,
@@ -74,7 +65,7 @@ class _MainMenuState extends State<MainMenu> {
                   children: [
                     ModeCard(Modes.Visual),
                     ModeCard(Modes.Vibrate),
-                    ModeCard(Modes.Sound),
+                    // ModeCard(Modes.Sound),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(

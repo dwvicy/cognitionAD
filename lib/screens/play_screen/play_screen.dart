@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dart:async';
 import 'package:vibration/vibration.dart';
-import 'package:audioplayers/audio_cache.dart';
 
 int next(int min, int max) => min + Random().nextInt(max - min);
 
@@ -29,14 +28,13 @@ class _PlayScreenState extends State<PlayScreen> {
   String screenText = '';
   Stopwatch stopwatch;
   Duration waitTime;
-  static AudioCache audioPlayer;
+
   Timer _timer = Timer(Duration(minutes: 0), () => {});
 
   void initState() {
     super.initState();
     playBloc = PlayBloc();
     screenColor = Colors.yellow;
-    audioPlayer = AudioCache();
   }
 
   @override
@@ -115,8 +113,8 @@ class _PlayScreenState extends State<PlayScreen> {
       case PlayState.Tap:
         if (mode == Modes.Vibrate) {
           Vibration.vibrate(duration: 500);
-        } else if (mode == Modes.Sound) {
-          audioPlayer.play("sound/Beep.mp3");
+          // } else if (mode == Modes.Sound) {
+          //   audioPlayer.play("sounds/Beep.mp3");
         } else {
           screenColor = Colors.green;
           screenText = "Tap Now!";
@@ -125,7 +123,7 @@ class _PlayScreenState extends State<PlayScreen> {
 
       case PlayState.Results:
         screenColor = Colors.yellow;
-        screenText = "Your FLX time";
+        screenText = "Your reflex time";
         break;
 
       case PlayState.ErrorDisplay:
