@@ -66,32 +66,32 @@ class _MainMenuState extends State<MainMenu> {
                     ModeCard(Modes.Visual),
                     ModeCard(Modes.Vibrate),
                     // ModeCard(Modes.Sound),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        child: Card(
-                          elevation: 8.0,
-                          color: AppTheme.ello,
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(40))),
-                              child: Center(
-                                child: Text("Personal Stats",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold)),
-                              )),
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => StatsAnimation()),
-                          );
-                        },
-                      ),
-                    )
+                    // Padding(
+                    //   padding: const EdgeInsets.all(8.0),
+                    //   child: GestureDetector(
+                    //     child: Card(
+                    //       elevation: 8.0,
+                    //       color: AppTheme.ello,
+                    //       child: Container(
+                    //           decoration: BoxDecoration(
+                    //               borderRadius: BorderRadius.all(Radius.circular(40))),
+                    //           child: Center(
+                    //             child: Text("Personal Stats",
+                    //                 textAlign: TextAlign.center,
+                    //                 style: TextStyle(
+                    //                     color: Colors.black,
+                    //                     fontSize: 30,
+                    //                     fontWeight: FontWeight.bold)),
+                    //           )),
+                    //     ),
+                    //     onTap: () {
+                    //       Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(builder: (context) => StatsAnimation()),
+                    //       );
+                    //     },
+                    //   ),
+                    // )
                   ]),
             ),
           ],
