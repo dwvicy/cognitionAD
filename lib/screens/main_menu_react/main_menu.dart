@@ -51,10 +51,22 @@ class _MainMenuState extends State<MainMenu> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 60.0),
-              child: Text(
-                "React",
-                style: Style.bigHead,
-              ),
+              child: Row(children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/');
+                    },
+                    icon: Icon(Icons.arrow_back_ios),
+                    color: Colors.yellow[700],
+                  ),
+                ),
+                Text(
+                  "React",
+                  style: Style.bigHead,
+                ),
+              ]),
             ),
             Container(
               height: itemHeight,

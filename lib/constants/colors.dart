@@ -9,7 +9,7 @@ class AppTheme {
 }
 
 class Style {
-  static const TextStyle bigHead = TextStyle(fontFamily: 'Josefin', fontSize: 48);
+  static const TextStyle bigHead = TextStyle(fontFamily: 'Josefin', fontSize: 43);
   static const TextStyle smolHead = TextStyle(fontFamily: 'Josefin', fontSize: 35);
   static const TextStyle smolText = TextStyle(fontFamily: 'Josefin', fontSize: 20);
   static const TextStyle smollyWhite =

@@ -59,11 +59,26 @@ class _HomeState extends State<Home> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Memory Matching',
-                    textAlign: TextAlign.center,
-                    style: Style.bigHead,
-                  ),
+                  child: Row(children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/');
+                        },
+                        icon: Icon(Icons.arrow_back_ios),
+                        color: Colors.blueAccent,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        'Memory Game',
+                        textAlign: TextAlign.center,
+                        style: Style.bigHead,
+                      ),
+                    ),
+                  ]),
                 ),
               ),
               Padding(
@@ -165,7 +180,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               );
-              level *= 2;
+              level = level + 4;
             },
             child: Text("NEXT"),
           ),
