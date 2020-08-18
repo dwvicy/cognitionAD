@@ -51,6 +51,10 @@ flutter:
      fonts:
        - asset: assets/fonts/JosefinSans-Bold.ttf
          weight: 700
+  
+  assets:
+  - assets/animation/react.png
+  - assets/animation/splash.flr2d
 
 
   # The following line ensures that the Material Icons font is

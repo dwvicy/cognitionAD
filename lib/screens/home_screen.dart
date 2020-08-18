@@ -7,8 +7,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> names = ["Reaction Time", "Odd Color", "Memory Matching"];
-
+  List<String> names = ["Reaction Time", "Odd Color", "Memory Game"];
+  List<IconData> icons = [Icons.touch_app, Icons.color_lens, Icons.memory];
   List<Color> colors = [AppTheme.ello, AppTheme.red, AppTheme.blue];
 
   @override
@@ -65,11 +65,23 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
                               child: Center(
-                                  child: Text(
-                                names[index],
-                                textAlign: TextAlign.center,
-                                style: Style.smolHead,
-                              )),
+                                  child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Icon(
+                                        icons[index],
+                                        size: 50,
+                                      ),
+                                    ),
+                                    Text(
+                                      names[index],
+                                      textAlign: TextAlign.center,
+                                      style: Style.smolHead,
+                                    ),
+                                  ])),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(Radius.circular(40)),
                                   color: colors[index],
